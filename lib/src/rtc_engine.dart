@@ -9,7 +9,8 @@ import 'enums.dart';
 import 'events.dart';
 import 'rtc_channel.dart';
 
-/// RtcEngine is the main class of the Agora SDK.
+/// RtcEngine is the main interface class of the Agora SDK.
+/// Call the method of this class to use all functionalities of the SDK. We recommend calling the RtcEngine API methods in the same thread instead of in multiple threads.
 class RtcEngine
     implements
         RtcUserInfoInterface,
@@ -54,15 +55,22 @@ class RtcEngine
     return _methodChannel.invokeMethod(method, arguments);
   }
 
-  /// Creates an RtcEngine instance.
-  /// See [RtcEngine]
+  /// Creates an [RtcEngine] instance.
+  ///
   /// Unless otherwise specified, all the methods provided by the RtcEngine class are executed asynchronously. Agora recommends calling these methods in the same thread.
-  /// Note
+  ///
+  /// **Note**
   /// - You must create an RtcEngine instance before calling any other method.
-  /// - You can create an RtcEngine instance either by calling this method or by calling create2. The difference between create2 and this method is that create2 enables you to specify the connection area.
-  /// See [RtcEngine.createWithAreaCode]
-  /// - The Agora RTC Native SDK supports creating only one RtcEngine instance for an app for now.
-  /// Param [appId] The App ID issued to you by Agora. See How to get the App ID. Only users in apps with the same App ID can join the same channel and communicate with each other. Use an App ID to create only one RtcEngine instance. To change your App ID, call destroy to destroy the current RtcEngine instance, and after destroy returns 0, call create to create an RtcEngine instance with the new App ID.
+  /// - You can create an RtcEngine instance either by calling this method or by calling [createWithAreaCode]. The difference between `createWithAreaCode` and this method is that `createWithAreaCode` enables you to specify the connection area.
+  /// - The Agora RTC SDK supports creating only one RtcEngine instance for an app.
+  ///
+  /// **Param**
+  /// - [appId]: The App ID issued to you by Agora. Only users in apps with the same App ID can join the same channel and communicate with each other. Use an App ID to create only one RtcEngine instance. To change your App ID, call destroy to destroy the current RtcEngine instance, and call create to create an RtcEngine instance with the new App ID.
+  ///
+  /// **Returns**
+  /// - An [RtcEngine] instance, if the method call succeeds.
+  /// - < 0, if the method call fails.
+  ///   - `ERR_INVALID_APP_ID(101)`: The app ID is invalid. Check if it is in the correct format.
   static Future<RtcEngine> create(String appId) async {
     return createWithAreaCode(appId, IPAreaCode.AREA_GLOBAL);
   }
